@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #121212, #1f1f1f);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #1e1e1e;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(183, 108, 241, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #b76cf1;
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #d6b8f6;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #2a2a2a;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .radio-group {
+      margin-bottom: 20px;
+    }
+
+    .radio-group label {
+      font-weight: normal;
+      color: #ccc;
+      margin-right: 20px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #b76cf1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #a055e0;
+    }
+
+    a.back-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-align: center;
+      color: #b76cf1;
+      text-decoration: none;
+      transition: color 0.3s;
+      font-weight: bold;
+    }
+
+    a.back-link:hover {
+      color: #ffffff;
+    }
+
+    .success-message {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #90ee90;
+      margin-top: 20px;
+    }
+
+    .total-box {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #b8ffdc;
+      margin-bottom: 25px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Checkout</h1>
+
+    {% if order_placed %}
+      <p class="success-message">🎉 Thank you {{ customer_name }}! Your order has been placed successfully!</p>
+
+      <script>
+        // Fire confetti 🎊
+        confetti({
+          particleCount: 160,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        // Redirect after 4 seconds
+        setTimeout(function() {
+            window.location.href = "{% url 'product_details' %}";
+        }, 4000);
+      </script>
+    {% else %}
+      <div class="total-box">
+        🛒 Total Amount: ₹{{ total }}
+      </div>
+
+      <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="address">Shipping Address</label>
+        <textarea id="address" name="address" rows="4" required></textarea>
+
+        <label>Gift Wrap?</label>
+        <div class="radio-group">
+          <label><input type="radio" name="giftwrap" value="yes" required> Yes</label>
+          <label><input type="radio" name="giftwrap" value="no"> No</label>
+        </div>
+
+        <label>Payment Method</label>
+        <div class="radio-group">
+          <label><input type="radio" name="payment" value="cod" required> Cash on Delivery</label>
+          <label><input type="radio" name="payment" value="upi"> UPI</label>
+          <label><input type="radio" name="payment" value="card"> Debit Card</label>
+        </div>
+
+        <button type="submit" class="submit-btn">Place Order</button>
+      </form>
+    {% endif %}
+
+    <a class="back-link" href="{% url 'view_cart' %}">&larr; Back to Cart</a>
+  </div>
+</body>
+</html>

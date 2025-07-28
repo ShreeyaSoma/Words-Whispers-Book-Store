@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Successful</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 50px;
+        }
+        .success-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .success-box h1 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <h1>✅ Thank you {{ name }}!</h1>
+        <p>Your order was placed successfully. 🛍️</p>
+        <a href="{% url 'product_details' %}">Continue Shopping</a>
+    </div>
+</body>
+</html>

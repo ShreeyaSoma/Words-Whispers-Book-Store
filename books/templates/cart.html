@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #121212, #1f1f1f);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    a.back-link {
+      color: #b76cf1;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 25px;
+      transition: color 0.3s;
+    }
+
+    a.back-link:hover {
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.6rem;
+      color: #b76cf1;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background-color: #2a2a2a;
+      color: #b76cf1;
+      font-weight: 600;
+    }
+
+    td {
+      font-size: 0.95rem;
+    }
+
+    img {
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .btn-remove {
+      background-color: #ff4d4d;
+      border: none;
+      padding: 6px 12px;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-remove:hover {
+      background-color: #e60000;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #b76cf1;
+    }
+
+    .empty-cart {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #aaa;
+      margin-top: 60px;
+    }
+
+    .checkout-btn {
+      margin-top: 30px;
+      display: block;
+      text-align: center;
+    }
+
+    .checkout-btn button {
+      background-color: #b76cf1;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .checkout-btn button:hover {
+      background-color: #a055e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back-link" href="{% url 'product_details' %}">&larr; Back to Genres</a>
+    <h1>Your Cart</h1>
+
+    {% if cart_items %}
+    <table>
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>Author</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>
+            <img src="{{ item.book.image_url }}" alt="{{ item.book.title }}"><br>
+            {{ item.book.title }}
+          </td>
+          <td>{{ item.book.author }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>₹{{ item.book.price }}</td>
+          <td>₹{{ item.subtotal }}</td>  <!-- Fixed this line -->
+          <td>
+            <form method="post" action="{% url 'remove_from_cart' item.book.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-remove">✖</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Total display -->
+    <div class="total">
+      Grand Total: ₹{{ total }}
+    </div>
+
+    <div class="checkout-btn">
+      <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <button type="submit">Proceed to Checkout</button>
+      </form>
+    </div>
+    {% else %}
+      <p class="empty-cart">Your cart is empty.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
