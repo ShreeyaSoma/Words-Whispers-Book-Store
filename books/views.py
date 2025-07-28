@@ -12,7 +12,7 @@ def index(request):
 def register_view(request):
     if request.method == 'POST':
         username = request.POST['username']
-        password = request.POST['password']
+        password = request.POST['password1']  # 🔧 Changed from 'password' to 'password1'
         email = request.POST['email']
         user = User.objects.create_user(username=username, password=password, email=email)
         login(request, user)
