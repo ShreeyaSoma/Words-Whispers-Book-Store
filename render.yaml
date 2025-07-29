@@ -10,3 +10,7 @@ services:
         value: mydjproject.settings
       - key: PYTHON_VERSION
         value: 3.10
+      - key: SECRET_KEY
+        value: your-secret-key-here
+      - key: DEBUG
+        value: False
